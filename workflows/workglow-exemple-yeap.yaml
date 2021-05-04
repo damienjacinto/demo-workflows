@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: modelisation-cli-import-exemple
+spec:
   entrypoint: modelisation-cli-import
   serviceAccountName: argo
   parallelism: 1
