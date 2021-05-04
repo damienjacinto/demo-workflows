@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: hello-world
+  entrypoint: whalesay
+  serviceAccountName: argo
+  parallelism: 1
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+  templates:
+  - name: whalesay
+    container:
+      image: docker/whalesay:latest
+      command: [cowsay]
+      args: ["hello world"]
