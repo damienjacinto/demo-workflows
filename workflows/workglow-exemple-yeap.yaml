@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: modelisation-cli-import-exemple
+spec:
+  entrypoint: modelisation-cli-import
+  serviceAccountName: argo
+  parallelism: 1
+  imagePullSecrets:
+  - name: regcred
+  templates:
+  - name: modelisation-cli-import
+    container:
+      image: maprivateregitsry.docker.io/image-import:v1.0.1
+      command: [/app/scripts/import.sh]
+      imagePullPolicy: IfNotPresent
+      env:
+      - name: YP_TOOLS_IMPORT__APISERVER
+        value: yeap-back-dev-modelisation.yeap-back.svc.cluster.local
+      - name: YP_TOOLS_IMPORT__DIRECTORY
+        value: /app/imports
+      - name: YP_TOOLS_AUTH0__DOMAIN
+        valueFrom:
+          secretKeyRef:
+            name: auth0-cli
+            key: apiAuth
+      - name: YP_TOOLS_AUTH0__CLIENTID
+        valueFrom:
+          secretKeyRef:
+            name: auth0-cli
+            key: apiAuthId
+      - name: YP_TOOLS_AUTH0__CLIENTSECRET
+        valueFrom:
+          secretKeyRef:
+            name: auth0-cli
+            key: apiAuthSecret
+    volumes:
+    - name: auth0-cli
+      secret:
+        secretName: auth0-cli
